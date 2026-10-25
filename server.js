@@ -36,7 +36,12 @@ app.post('/webhook', async (req, res) => {
 
         res.status(200).send('OK');
     } catch (error) {
-        console.error('Error:', error.message);
+        // Yeh line batayegi ki asli error kahan aa raha hai (Typebot se ya Chatwoot se)
+        if (error.response) {
+            console.error('API Error Response:', error.response.status, error.response.data);
+        } else {
+            console.error('Error Message:', error.message);
+        }
         res.status(500).send('Error');
     }
 });
