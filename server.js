@@ -10,8 +10,9 @@ const CHATWOOT_TOKEN = 'VnrDLYCdrwp1zZmbmS8gkxoP';
 
 app.post('/webhook', async (req, res) => {
     try {
+        console.log("Webhook Received:", JSON.stringify(req.body, null, 2)); // Yeh line add kar do
+        
         const event = req.body;
-
         // Sirf tab chale jab customer ka naya incoming message ho
         if (event.event === 'message_created' && event.message_type === 'incoming' && event.content) {
             const conversationId = event.conversation.id;
