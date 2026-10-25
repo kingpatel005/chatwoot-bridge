@@ -10,23 +10,22 @@ const CHATWOOT_TOKEN = 'VnrDLYCdrwp1zZmbmS8gkxoP';
 
 app.post('/webhook', async (req, res) => {
     try {
-        console.log("Webhook Received:", JSON.stringify(req.body, null, 2)); // Yeh line add kar do
-        
         const event = req.body;
-        // Sirf tab chale jab customer ka naya incoming message ho
+
+        // Jab bhi customer naya message bheje
         if (event.event === 'message_created' && event.message_type === 'incoming' && event.content) {
             const conversationId = event.conversation.id;
             const userMessage = event.content;
 
-            // 1. Message ko Typebot ke paas bhejo
+            // 1. Message Typebot ko bhejo
             const typebotResponse = await axios.post(TYPEBOT_URL, {
                 message: userMessage
             });
 
-            // 2. Typebot ke jawab ka text nikalo
+            // 2. Typebot ka jawab nikalo
             const botReply = typebotResponse.data.messages[0].text;
 
-            // 3. Us jawab ko Chatwoot par wapas bhejo
+            // 3. Jawab wapas Chatwoot par bhej do
             await axios.post(`${CHATWOOT_API}/conversations/${conversationId}/messages`, {
                 content: botReply,
                 message_type: 'outgoing'
@@ -42,6 +41,7 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log('Bridge is running on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Bridge running on port ${PORT}`);
 });
